@@ -39,8 +39,11 @@ def main(argv=None):
     env = Env()
     # pylint: disable=invalid-name
     cherrypy.tree.graft(app, '/')
-    #cherrypy.log.error_log.propagate = False
+    cherrypy.log.error_log.propagate = False
     cherrypy.server.unsubscribe()
+
+    print('server.socket_host: {}'.format(env.host))
+    print('server.socket_port: {}'.format(env.port))
 
     cherrypy.config.update({
         'server.socket_host': env.host,
