@@ -1,0 +1,14 @@
+/* TEAM */
+Name: Yasuhiro Asaka
+Mail: yasuhiro.asaka@lupine-software.com
+
+Name: Misaki Asaka
+Mail: misaki.asaka@lupine-software.com
+
+/* ABOUT US */
+Firm: Lupine Software LLC
+Site: https://lupine-software.com
+
+/* API */
+Name: Scrolliris
+Type: application/json

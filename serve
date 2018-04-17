@@ -1,0 +1,142 @@
+#!/bin/sh
+# set -x
+
+env_name=""
+app_name="bern"
+config_file=""
+
+with_install="no"
+with_reload="no"
+
+text_banner="\
+ , __
+/|/  \\
+ | __/ _   ,_    _  _
+ |   \\|/  /  |  / |/ |
+ |(__/|__/   |_/  |  |_/ by Lupine Software LLC
+"
+
+print_context() {
+  cat <<CTX
+
+<context>
+environment..... ${env_name}
+config_file..... ${config_file}
+install packages..... ${with_install}
+with reload option..... ${with_reload}
+CTX
+}
+
+print_usage() {
+  cat <<USG
+
+Usage:
+ [ENV=] ${1} [options] <config_file>
+
+Run server.
+
+Options:
+ -c, --config    load configuration from \`file\`
+ -e, --env       set environment {development|production}
+ -h, --help      display this help and exit
+ -i, --install   install packages before run from pypi
+ -r, --reload    run server with reload option
+
+Positional arguments:
+ config_file     config/{development|production}.ini (optional)
+
+Examples:
+ % ENV=development serve --reload
+ % serve -e production -c config/production.ini
+ % serve --install -e production
+USG
+}
+
+run_install_command() {
+  pip install -e ".[${1}]" -c constraints.txt
+}
+
+
+getopt --test > /dev/null
+if [ $? -ne 4 ]; then
+  echo "\`getout --test\` failed"
+fi
+
+set -e
+
+options=cehir
+longoptions=config,env,help,install,reload
+
+_=`getopt --name "${0}" \
+--options "${options}" --longoptions "${longoptions}" --unquoted -- "${@}"`
+
+if [ $? -ne 0 ]; then
+  exit 2
+fi
+
+
+while [ $# -gt 0 ]; do
+  case "${1}" in
+    -c|--config)
+      config_file="${2}"
+      shift
+      ;;
+    -e|--env)
+      ENV="${2}"
+      shift
+      ;;
+    -h|--help)
+      print_usage `basename $0`
+      exit 0
+      ;;
+    -i|--install)
+      with_install="yes"
+      ;;
+    -r|--reload)
+      with_reload="yes"
+      ;;
+    *.ini)
+      ENV="${1/config\//}"
+      config_file="${1}"
+      ;;
+    *)
+      echo "Unknown option :'("
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+if [ "${ENV}" = "" ]; then
+  ENV="development"
+fi
+if [ "${env_name}" = "" ]; then
+  env_name="${ENV}"
+fi
+
+case "${env_name}" in
+  "development"|"production")
+    echo -en "${text_banner}"
+    print_context
+    if [ "yes" = "${with_install}" ]; then
+      run_install_command $env_name
+    fi
+    if [ "production" = "${env_name}" ]; then
+      cmd="${app_name}_pstart"
+    else
+      cmd="${app_name}_pserve"
+    fi
+    if [ "yes" = "${with_reload}" ]; then
+      cmd="${cmd} --reload"
+    fi
+    echo
+    echo "<command>"
+    echo "% ${cmd} ${config_file}"
+    echo
+    $cmd $config_file
+    ;;
+  *)
+    print_usage `basename $0`
+    exit 1
+    ;;
+esac

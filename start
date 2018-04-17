@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+set -e
+
+app_name="bern"
+root_dir=$(cd $(dirname $0)/; pwd)
+
+if [ "$ENV" = "" ]; then
+  export ENV=production
+fi
+
+$root_dir/serve --env ${ENV} --config config/production.ini --install

@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+
+tool_dir=$(dirname $(readlink -f "${0}"))
+name="gitlab-ci-multi-runner"
+platform="linux-amd64"
+version="latest"
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+echo "Platform: ${platform}"
+echo "Version: ${version}"
+echo ""
+echo "-----> Installing into: ${tool_dir}"
+
+location_base="https://gitlab-ci-multi-runner-downloads.s3.amazonaws.com"
+location="${location_base}/${version}/binaries/${name}-${platform}"
+
+curl -sL $location -o $tool_dir/$name
+
+chmod +x $_
+
+echo "Done" | indent
