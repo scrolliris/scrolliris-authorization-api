@@ -4,6 +4,7 @@ python-dotenv==0.6.4
 pyramid==1.9.1
 pyramid_assetviews==1.0a3
 pyramid_services==0.4
+redis==2.10.6
 
 # production
 CherryPy==14.0.1

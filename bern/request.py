@@ -2,7 +2,7 @@ import sys
 
 from pyramid.request import Request as OriginalRequest
 
-from .env import Env
+from bern.env import Env
 
 __all__ = ['Request']
 
@@ -19,3 +19,8 @@ class Request(OriginalRequest):  # pylint: disable=too-many-ancestors
             super().__init__(*args, **kwargs)
         else:
             super(Request, self).__init__(*args, **kwargs)
+
+    @property
+    def settings(self):
+        from bern import get_settings
+        return get_settings() or {}

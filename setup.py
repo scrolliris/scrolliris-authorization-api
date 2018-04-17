@@ -17,6 +17,7 @@ requires = [
     'pyramid',
     'pyramid_assetviews',
     'pyramid_services',
+    'redis',
 ]
 
 development_requires = [

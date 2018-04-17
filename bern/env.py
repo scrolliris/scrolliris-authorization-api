@@ -37,6 +37,8 @@ class Env(object):
         return {
             # NOTE: these values are updated if exist but not empty
             'wsgi.url_scheme': 'WSGI_URL_SCHEME',
+            'queue.url': 'QUEUE_URL',
+            'store.url': 'STORE_URL',
         }
 
     def get(self, key, default=None):  # pylint: disable=no-self-use

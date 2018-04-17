@@ -8,7 +8,7 @@ from pyramid.view import (
 )
 import pyramid.httpexceptions as exc
 
-from bern import logger
+from bern.service import IGenerator
 
 
 def no_cache(_request, response):
@@ -78,16 +78,22 @@ def issue_token(req):
     if str(req.accept).lower() != 'application/json':
         raise exc.HTTPNotFound()
 
-    # TODO
-    # project_id = req.matchdict.get('project_id')
-    # api_key = req.params.get('api_key')
-    # action = req.params.get('action')
-
     req.add_response_callback(no_cache)
 
-    result = {}
-    logger.info(result)
+    project_id = req.matchdict.get('project_id')
+    api_key = req.params.get('api_key')
+    action = req.params.get('action')
 
+    generator = req.find_service(iface=IGenerator, name='token')
+    token = generator.generate(project_id=project_id, api_key=api_key,
+                               action=action)
+    if not token:
+        # token should be always returned
+        raise exc.HTTPInternalServerError()
+
+    result = {
+        'token': token
+    }
     prefix = req.env.get('RESPONSE_PREFIX', '')
     res = Response(prefix + json.dumps(dict(result)), status='200 OK')
 

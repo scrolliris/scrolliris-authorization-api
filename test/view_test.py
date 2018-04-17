@@ -48,6 +48,25 @@ def test_issue_token_response_accept_mismatch(dummy_request):
         issue_token(dummy_request)
 
 
+def test_issue_token_response_prefix(dummy_request):
+    dummy_request.env = {
+        'RESPONSE_PREFIX': '12345'
+    }
+    dummy_request.accept = 'application/json'
+    dummy_request.matchdict = {
+        'project_id': '123',
+    }
+    dummy_request.params = dummy_request.GET = NestedMultiDict({
+        'api_key': '456',
+    })
+
+    res = issue_token(dummy_request)
+    assert isinstance(res, Response)
+
+    body = res.body.decode()
+    assert body.startswith('12345')
+
+
 def test_issue_token_response(dummy_request):
     dummy_request.env = {
         'RESPONSE_PREFIX': ''
@@ -62,4 +81,7 @@ def test_issue_token_response(dummy_request):
 
     res = issue_token(dummy_request)
     assert isinstance(res, Response)
-    assert {} == json.loads(res.body.decode())
+
+    data = json.loads(res.body.decode())
+    assert isinstance(data, dict)
+    assert data.get('token')

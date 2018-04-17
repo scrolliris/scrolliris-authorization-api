@@ -83,7 +83,11 @@ def config(request, settings):
     # type (Router, dict) -> Configurator
     config = testing.setUp(settings=settings)
 
+    config.include('pyramid_services')
+
     config.include('bern.route')
+    config.include('bern.service')
+    config.include('bern.view')
 
     def teardown():  # type () -> None
         testing.tearDown()
@@ -94,11 +98,12 @@ def config(request, settings):
 
 
 @pytest.fixture(scope='function')
-def dummy_request(extra_environ):  # type (dict) -> Request
+def dummy_request(extra_environ, settings):  # type (dict) -> Request
     locale_name = 'en'
     req = testing.DummyRequest(
         subdomain='',
         environ=extra_environ,
+        settings=settings,
         _LOCALE_=locale_name,
         locale_name=locale_name,
         matched_route=None)
