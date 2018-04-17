@@ -6,7 +6,7 @@ from pyramid.paster import (
     setup_logging
 )
 
-from bern.env import Env
+from bern.env import Env, load_dotenv_vars
 
 
 def usage(argv):
@@ -17,8 +17,6 @@ def usage(argv):
 
 
 def wsgi_app(argv=None):
-    from bern.env import load_dotenv_vars
-
     if not argv:
         argv = sys.argv
 
@@ -28,28 +26,34 @@ def wsgi_app(argv=None):
     load_dotenv_vars()
 
     config_uri = argv[1] if 1 in argv else 'config/production.ini'
-    app = get_app(config_uri, 'bern')
     setup_logging(config_uri)
 
+    app = get_app(config_uri, 'bern')
     return app
 
 
 def main(argv=None):
-    import cherrypy
-
+    import cherrypy  # only for production
     app = wsgi_app(argv)
 
+    env = Env()
     # pylint: disable=invalid-name
     cherrypy.tree.graft(app, '/')
+    #cherrypy.log.error_log.propagate = False
     cherrypy.server.unsubscribe()
 
-    env = Env()
+    cherrypy.config.update({
+        'server.socket_host': env.host,
+        'server.socket_port': env.port,
+        'engine.autoreload.on': False,
+    })
     server = cherrypy._cpserver.Server()  # pylint: disable=protected-access
     server.socket_host = env.host
     server.socket_port = env.port
     server.thread_pool = 30
     server.subscribe()
 
+    cherrypy.engine.signals.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()
 

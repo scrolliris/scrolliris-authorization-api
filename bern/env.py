@@ -47,11 +47,11 @@ class Env(object):
 
     @reify
     def host(self):
-        return str(self.get('HOST', '127.0.0.1'))
+        return str(self.get('HOST', '0.0.0.0'))
 
     @reify
     def port(self):
-        return int(self.get('PORT', 5000))
+        return int(self.get('PORT', 8080))
 
     @reify
     def value(self):

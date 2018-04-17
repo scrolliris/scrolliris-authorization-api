@@ -17,9 +17,10 @@ WORKDIR app/
 RUN set -eux; \
     \
     eselect news read --quiet new >/dev/null 2>&1; \
-    emerge -qv =dev-lang/python-3.5.5;
+    echo "dev-lang/python ~amd64" >> /etc/portage/package.accept_keywords; \
+    emerge -qv =dev-lang/python-3.5.5 =dev-python/virtualenv-15.1.0; \
     \
-    virtualenv /env -p python3.5
+    virtualenv /env -p python3.5;
 
 ENV ENV production
 ENV WSGI_URL_SCHEME http

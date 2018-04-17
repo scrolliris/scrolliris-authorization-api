@@ -14,7 +14,7 @@
  |   \|/  /  |  / |/ |
  |(__/|__/   |_/  |  |_/
 
-Bern:
+Bern: BEaRer tokeN server for scrolliris
 ```
 
 
@@ -24,13 +24,24 @@ https://gitlab.com/scrolliris/bern
 
 
 
-## Requirements
+## Usage
+
+See `Dockerfile` (Gentoo Linux).
+
+```zsh
+% docker build -t scrolliris/bern .
+% docker run -it scrolliris/bern
+```
+
+
+## Development
+
+### Requirements
 
 * Python `3.5.5`
 * Redis
 
-
-## Setup
+### Setup
 
 ```zsh
 : setup python environment (e.g. virtualenv)
@@ -38,8 +49,6 @@ https://gitlab.com/scrolliris/bern
 % source venv/bin/activate
 (venv) % pip install --upgrade pip setuptools
 ```
-
-### Development
 
 Use `waitress` as wsgi server.  
 Check `Makefile`.
@@ -55,7 +64,7 @@ Check `Makefile`.
 (venv) % ENV=development make setup
 ```
 
-### Server
+### Boot
 
 ```
 : run server (waitress)
@@ -91,8 +100,7 @@ Check `Makefile`.
 (venv) % make test
 ```
 
-
-## CI
+### CI
 
 You can check it by yourself using `gitlab-ci-multi-runner` on locale machine.
 It requires `docker`.

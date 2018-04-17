@@ -16,12 +16,12 @@ setup: ## Install dependencies
 
 # -- application
 
-serve: ## Start server in development mode
+serve: ## Start server using waitress
 	./serve --env ${env} --config config/${env}.ini --reload
 .PHONY: serve
 
-start:  ## Start server process in production mode
-	honcho start
+start:  ## Start server on the process by cherrypy via honcho
+	honcho -e ${env} start
 .PHONY: start
 
 # -- testing/coverage

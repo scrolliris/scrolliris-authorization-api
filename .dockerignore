@@ -1,0 +1,21 @@
+venv*
+
+tmp/
+tool/
+
+.cache/
+
+.git/
+.gitignore
+
+README.md
+
+# testing/ci
+.pytest_cache/
+.pylintrc
+setup.cfg
+.coverage
+.gitlab-ci.yml
+
+# ignore all `.env` files and examples
+.env*
