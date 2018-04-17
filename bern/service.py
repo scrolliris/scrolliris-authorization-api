@@ -15,10 +15,8 @@ class IValidator(Interface):
 
 
 class AuthenticationValidator(object):
-    """
-    A Validator which checks the authentication of request using credentials
-    given as parametrs.
-    """
+    """A service which checks the validity of request with credentials."""
+
     def __init__(self, *_args, **_kwargs):
         if sys.version_info[0] > 3:
             # pylint: disable=missing-super-argument
@@ -29,7 +27,6 @@ class AuthenticationValidator(object):
     # pylint: disable=no-self-use
     def validate(self, project_id='', api_key='', action='read'):
         """Validates params (project_access_key_id and api_key)."""
-
         logger.info('project_id -> %s, api_key -> %s, action -> %s',
                     project_id, api_key, action)
 

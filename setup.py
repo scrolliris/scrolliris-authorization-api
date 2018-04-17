@@ -21,6 +21,7 @@ requires = [
 
 development_requires = [
     'flake8',
+    'flake8_docstrings',
     'pylint',
     'waitress',
 ]

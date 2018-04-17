@@ -72,7 +72,6 @@ def issue_token_option(req):
              request_method='GET')
 def issue_token(req):
     """Returns an issued token."""
-
     if 'api_key' not in req.params:
         raise exc.HTTPForbidden()
 
