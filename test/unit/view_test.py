@@ -86,6 +86,25 @@ def test_issue_token_response_prefix(monkeypatch, dummy_request):
     assert body.startswith('12345')
 
 
+def test_issue_token_is_not_generated(monkeypatch, dummy_request):
+    monkeypatch.setattr(dummy_request, 'find_service',
+                        dummy_find_service(None))
+
+    dummy_request.env = {
+        'RESPONSE_PREFIX': ''
+    }
+    dummy_request.accept = 'application/json'
+    dummy_request.matchdict = {
+        'project_id': '123',
+    }
+    dummy_request.params = dummy_request.GET = NestedMultiDict({
+        'api_key': '456',
+    })
+
+    with pytest.raises(exc.HTTPInternalServerError):
+        issue_token(dummy_request)
+
+
 def test_issue_token_response(monkeypatch, dummy_request):
     monkeypatch.setattr(dummy_request, 'find_service',
                         dummy_find_service('789'))
