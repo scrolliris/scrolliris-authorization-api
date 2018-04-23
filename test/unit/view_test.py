@@ -8,18 +8,31 @@ from webob.multidict import NestedMultiDict
 from bern.view import issue_token
 
 
-@pytest.fixture(autouse=True)
-def setup(request, mocker, config):
-    # pylint: disable=unused-argument
-    mocker.patch('pyramid_services.find_service', autospec=True)
+# A builder for dummy generator service with token
+def dummy_find_service(token):
+    class DummyService(object):
+        def generate(self, *_args, **_kwargs):  # pylint: disable=no-self-use
+            return token
 
+    def find_service(*_args, **_kwargs):
+        return DummyService()
+
+    return find_service
+
+
+@pytest.fixture(autouse=True)
+def setup(request, monkeypatch, config):
+    # pylint: disable=unused-argument
     def teardown():
-        mocker.stopall()
+        monkeypatch.undo()
 
     request.addfinalizer(teardown)
 
 
-def test_issue_token_response_no_api_key(dummy_request):
+def test_issue_token_response_no_api_key(monkeypatch, dummy_request):
+    monkeypatch.setattr(dummy_request, 'find_service',
+                        dummy_find_service('789'))
+
     dummy_request.env = {
         'RESPONSE_PREFIX': ''
     }
@@ -32,7 +45,10 @@ def test_issue_token_response_no_api_key(dummy_request):
         issue_token(dummy_request)
 
 
-def test_issue_token_response_accept_mismatch(dummy_request):
+def test_issue_token_response_accept_mismatch(monkeypatch, dummy_request):
+    monkeypatch.setattr(dummy_request, 'find_service',
+                        dummy_find_service('789'))
+
     dummy_request.env = {
         'RESPONSE_PREFIX': ''
     }
@@ -48,7 +64,10 @@ def test_issue_token_response_accept_mismatch(dummy_request):
         issue_token(dummy_request)
 
 
-def test_issue_token_response_prefix(dummy_request):
+def test_issue_token_response_prefix(monkeypatch, dummy_request):
+    monkeypatch.setattr(dummy_request, 'find_service',
+                        dummy_find_service('789'))
+
     dummy_request.env = {
         'RESPONSE_PREFIX': '12345'
     }
@@ -67,7 +86,10 @@ def test_issue_token_response_prefix(dummy_request):
     assert body.startswith('12345')
 
 
-def test_issue_token_response(dummy_request):
+def test_issue_token_response(monkeypatch, dummy_request):
+    monkeypatch.setattr(dummy_request, 'find_service',
+                        dummy_find_service('789'))
+
     dummy_request.env = {
         'RESPONSE_PREFIX': ''
     }
@@ -84,4 +106,4 @@ def test_issue_token_response(dummy_request):
 
     data = json.loads(res.body.decode())
     assert isinstance(data, dict)
-    assert data.get('token')
+    assert '789' == data.get('token')

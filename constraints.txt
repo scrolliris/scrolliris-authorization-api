@@ -26,5 +26,4 @@ colorlog==3.1.2
 # testing
 pytest==3.5.0
 pytest-cov==2.5.1
-pytest-mock==1.9.0
 WebTest==2.0.29
