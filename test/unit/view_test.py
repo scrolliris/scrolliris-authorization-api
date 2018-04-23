@@ -7,21 +7,11 @@ from webob.multidict import NestedMultiDict
 
 from bern.view import issue_token
 
-
-# A builder for dummy generator service with token
-def dummy_find_service(token):
-    class DummyService(object):
-        def generate(self, *_args, **_kwargs):  # pylint: disable=no-self-use
-            return token
-
-    def find_service(*_args, **_kwargs):
-        return DummyService()
-
-    return find_service
+from ..conftest import dummy_find_service
 
 
 @pytest.fixture(autouse=True)
-def setup(request, monkeypatch, config):
+def setup(request, config, monkeypatch):
     # pylint: disable=unused-argument
     def teardown():
         monkeypatch.undo()

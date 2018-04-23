@@ -2,6 +2,8 @@ import collections
 
 import pytest
 
+from .conftest import dummy_find_service
+
 
 def routing_to(version_id='v1.0', project_id='123', path='token'):
     return '/{:s}/projects/{:s}/credentials/{:s}'.format(
@@ -9,12 +11,13 @@ def routing_to(version_id='v1.0', project_id='123', path='token'):
 
 
 @pytest.fixture(autouse=True)
-def setup(request, mocker, config):
+def setup(request, config, monkeypatch, dummy_request):
     # pylint: disable=unused-argument
-    mocker.patch('pyramid_services.find_service', autospec=True)
+    monkeypatch.setattr(dummy_request, 'find_service',
+                        dummy_find_service('token'))
 
     def teardown():
-        mocker.stopall()
+        monkeypatch.undo()
 
     request.addfinalizer(teardown)
 

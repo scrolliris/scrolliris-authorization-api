@@ -133,3 +133,17 @@ def dummy_app(_app, extra_environ):  # type (Router, dict) -> TestApp
     req.find_service = (lambda *args, **kwargs:
                         find_service(req, *args, **kwargs))
     return app
+
+
+# -- optional dummies
+
+# A builder for dummy generator service with token
+def dummy_find_service(token):
+    class DummyService(object):
+        def generate(self, *_args, **_kwargs):  # pylint: disable=no-self-use
+            return token
+
+    def find_service(*_args, **_kwargs):
+        return DummyService()
+
+    return find_service
