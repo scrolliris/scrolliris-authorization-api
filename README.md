@@ -1,10 +1,12 @@
-# Bern
+# Scrolliris Authorization API
+
+Code Name: `Bern`
 
 [![pipeline status][pipeline]][master] [![coverage report][coverage]][master]
 
-[pipeline]: https://gitlab.com/scrolliris/bern/badges/master/pipeline.svg
-[coverage]: https://gitlab.com/scrolliris/bern/badges/master/coverage.svg
-[master]: https://gitlab.com/scrolliris/bern/commits/master
+[pipeline]: https://gitlab.com/scrolliris/scrolliris-authorization-api/badges/master/pipeline.svg
+[coverage]: https://gitlab.com/scrolliris/scrolliris-authorization-api/badges/master/coverage.svg
+[master]: https://gitlab.com/scrolliris/scrolliris-authorization-api/commits/master
 
 
 ```txt
@@ -20,8 +22,7 @@ Bern: BEaRer tokeN server for scrolliris
 
 ## Repository
 
-https://gitlab.com/scrolliris/bern
-
+https://gitlab.com/scrolliris/scrolliris-authorization-api
 
 
 ## Usage
@@ -29,8 +30,8 @@ https://gitlab.com/scrolliris/bern
 See `Dockerfile` (Gentoo Linux).
 
 ```zsh
-% docker build -t scrolliris/bern .
-% docker run -it scrolliris/bern
+% docker build -t scrolliris/authorization-api .
+% docker run -it scrolliris/authorization-api
 ```
 
 
@@ -116,7 +117,7 @@ It requires `docker`.
 ## License
 
 ```txt
-Bern
+Scrolliris Authorization API
 Copyright (c) 2018 Lupine Software LLC
 ```
 
